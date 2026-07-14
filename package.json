@@ -1,7 +1,6 @@
 {
   "dependencies": {
-    "express": "^5.2.1",
-    "recharts": "^3.9.2"
+    "express": "^5.2.1"
   },
   "name": "azure-",
   "version": "1.0.0",
@@ -21,10 +20,8 @@
   "bugs": {
     "url": "https://github.com/Dio-79/Azure-/issues"
   },
-  "homepage": "https://github.com/Dio-79/Azure-#readme",
-  "devDependencies": {
-    "autoprefixer": "^10.5.3",
-    "postcss": "^8.5.19",
-    "tailwindcss": "^4.3.2"
-  }
+  "homepage": "https://github.com/Dio-79/Azure-#readme"
+
+  
 }
+

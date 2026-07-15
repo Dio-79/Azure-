@@ -4,8 +4,6 @@ import {
   PieChart,
   Pie,
   Cell,
-  Tooltip,
-  Legend,
   ResponsiveContainer,
 } from 'recharts';
 import type { DietSummary } from '@/Types/DashboardData';
@@ -26,7 +24,7 @@ export default function CaloriesPie({data}:{data:DietSummary[]}){
           cx="50%"
           cy="50%"
           outerRadius={90}
-          label={(entry: DietSummary) => entry.Diet}
+          label={({ name }) => name}
         >
           {data.map((_, i) => (
             <Cell key={i} fill={COLORS[i % COLORS.length]} />

@@ -5,7 +5,7 @@ import CaloriesBar from '@/components/CaloriesBar';
 import CaloriesPie from '@/components/CaloriesPie';
 import ProteinCaloriesScatter from '@/components/ProteinCaloriesScatter';
 import NutrientHeatmap from '@/components/NutrientHeatmap';
-import { mockData } from './mockdata';
+import { mockData } from './mockData';
 
 export default function MainScreen() {
   const [search, setSearch] = useState('');

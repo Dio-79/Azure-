@@ -1,35 +1,59 @@
 "use client";
 
 import {
-  PieChart,
-  Pie,
   Cell,
+  Pie,
+  PieChart,
   ResponsiveContainer,
-} from 'recharts';
-import type { DietSummary } from '@/Types/DashboardData';
+  Tooltip,
+} from "recharts";
+import type { CaloriesPiePoint } from "@/types/nutrition";
 
-const COLORS = ['#2563eb', '#16a34a', '#9333ea', '#ea580c', '#0891b2', '#ca8a04'];
+interface CaloriesPieProps {
+  data: CaloriesPiePoint[];
+}
 
-export default function CaloriesPie({data}:{data:DietSummary[]}){
-    if (data.length==0){
-        return<p className="text-sm text-gray-500 py-12 text-center">No data to display.</p>
-    }
+const COLORS = [
+  "#2563eb",
+  "#16a34a",
+  "#9333ea",
+  "#ea580c",
+  "#0891b2",
+  "#ca8a04",
+];
+
+export default function CaloriesPie({
+  data,
+}: CaloriesPieProps) {
+  if (data.length === 0) {
     return (
+      <p className="py-12 text-center text-sm text-gray-500">
+        No data to display.
+      </p>
+    );
+  }
+
+  return (
     <ResponsiveContainer width="100%" height={280}>
       <PieChart>
         <Pie
           data={data}
-          dataKey="AvgCalories"
-          nameKey="Diet"
+          dataKey="value"
+          nameKey="name"
           cx="50%"
           cy="50%"
           outerRadius={90}
           label={({ name }) => name}
         >
-          {data.map((_, i) => (
-            <Cell key={i} fill={COLORS[i % COLORS.length]} />
+          {data.map((point, index) => (
+            <Cell
+              key={point.name}
+              fill={COLORS[index % COLORS.length]}
+            />
           ))}
         </Pie>
-        </PieChart>
-    </ResponsiveContainer>)
+        <Tooltip />
+      </PieChart>
+    </ResponsiveContainer>
+  );
 }

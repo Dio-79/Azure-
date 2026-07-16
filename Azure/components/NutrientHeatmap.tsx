@@ -1,50 +1,76 @@
 "use client";
 
-import { Fragment } from 'react';
-import type { HeatCell } from '@/Types/DashboardData';
+import { Fragment } from "react";
+import type { HeatmapPoint } from "@/types/nutrition";
 
-export default function NutrientHeatmap({ data }: { data: HeatCell[] }) {
+interface NutrientHeatmapProps {
+  data: HeatmapPoint[];
+}
+
+export default function NutrientHeatmap({
+  data,
+}: NutrientHeatmapProps) {
   if (data.length === 0) {
-    return <p className="text-sm text-gray-500 py-12 text-center">No data to display.</p>;
+    return (
+      <p className="py-12 text-center text-sm text-gray-500">
+        No data to display.
+      </p>
+    );
   }
 
-  // unique rows (diets) and columns (nutrients), in first-seen order
-  const diets     = [...new Set(data.map(d => d.Diet))];
-  const nutrients = [...new Set(data.map(d => d.Nutrient))];
-  const max = Math.max(...data.map(d => d.Value));
+  const rows = [...new Set(data.map((point) => point.x))];
+  const columns = [...new Set(data.map((point) => point.y))];
+  const max = Math.max(
+    ...data.map((point) => Math.abs(point.value))
+  );
 
-  const valueAt = (diet: string, nutrient: string) =>
-    data.find(d => d.Diet === diet && d.Nutrient === nutrient)?.Value ?? 0;
+  const valueAt = (x: string, y: string) =>
+    data.find((point) => point.x === x && point.y === y)
+      ?.value ?? 0;
 
   return (
     <div
       className="grid gap-1 py-4 text-xs"
-      style={{ gridTemplateColumns: `90px repeat(${nutrients.length}, 1fr)` }}
+      style={{
+        gridTemplateColumns: `90px repeat(${columns.length}, 1fr)`,
+      }}
     >
-      {/* top-left empty corner + column headers */}
       <div />
-      {nutrients.map(n => (
-        <div key={n} className="text-center font-medium text-gray-600">{n}</div>
+      {columns.map((column) => (
+        <div
+          key={column}
+          className="text-center font-medium text-gray-600"
+        >
+          {column}
+        </div>
       ))}
 
-      {/* one row per diet: label cell + coloured value cells */}
-      {diets.map(diet => (
-        <Fragment key={diet}>
-          <div className="flex items-center font-medium text-gray-600">{diet}</div>
-          {nutrients.map(n => {
-            const v = valueAt(diet, n);
-            const intensity = max ? v / max : 0;          // 0 → 1
+      {rows.map((row) => (
+        <Fragment key={row}>
+          <div className="flex items-center font-medium text-gray-600">
+            {row}
+          </div>
+          {columns.map((column) => {
+            const value = valueAt(row, column);
+            const intensity = max
+              ? Math.abs(value) / max
+              : 0;
+
             return (
               <div
-                key={n}
-                title={`${diet} · ${n}: ${v}`}
-                className="text-center py-3 rounded"
+                key={column}
+                title={`${row} · ${column}: ${value}`}
+                className="rounded py-3 text-center"
                 style={{
-                  background: `rgba(37, 99, 235, ${intensity})`,
-                  color: intensity > 0.5 ? '#fff' : '#1f2937',
+                  background:
+                    value < 0
+                      ? `rgba(220, 38, 38, ${intensity})`
+                      : `rgba(37, 99, 235, ${intensity})`,
+                  color:
+                    intensity > 0.5 ? "#fff" : "#1f2937",
                 }}
               >
-                {v}
+                {value}
               </div>
             );
           })}
